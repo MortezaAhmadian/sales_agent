@@ -6,7 +6,7 @@ def web_search(query: str) -> str:
     results = DDGS().text(query, max_results=5)
     return json.dumps([{"title": r["title"], "body": r["body"]} for r in results])
 
-def scrape_web(url: str) -> str:
+def scrape_page(url: str) -> str:
     html = requests.get(url, timeout=10)
     soup = BeautifulSoup(html.text, 'html.parser')
     return soup.get_text(separator=" ", strip=True)[:3000]
