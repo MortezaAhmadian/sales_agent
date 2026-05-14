@@ -1,32 +1,35 @@
-from openai import OpenAI
+import httpx
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage, AIMessage
+from tools import tools
 
-client = OpenAI()
+def _make_llm():
+    return ChatOpenAI(
+        base_url=os.environ["VLLM_URL"],
+        model=os.getenv("VLLM_MODEL", "Qwen/Qwen2.5-32B-Instruct"),
+        api_key="dummy",
+        http_client=httpx.Client(
+            auth=(os.environ["NGINX_USER"], os.environ["NGINX_PASSWORD"]),
+            headers={"X-API-Key": os.environ["VLLM_API_KEY"]},
+        ),
+        temperature=0.1,
+    )
+
+llm = _make_llm().bind_tools(tools)
 
 def run_agent(prospect_name: str, company_name: str) -> str:
     messages = [
-        {
-            "role": "system", 
-            "content": """You are a sales research agent. Given a prospect's name and company,
-                        use your tools to research them thoroughly. Then return a JSON briefing with:
-                        - company_summary (2-3 sentences)
-                        - recent_news (list of 3 bullet points)
-                        - likely_pain_points (list)
-                        - suggested_talking_points (list)
-                        - risks_or_objections (list)"""
-            },
-        {
-            "role": "user", 
-            "content": f"Research {prospect_name} at {company_name}"
-            }
+        SystemMessage(content="""You are a sales research agent. Given a prospect's name and company,
+        use your tools to research them thoroughly. Then return a JSON briefing with:
+        - company_summary (2-3 sentences)
+        - recent_news (list of 3 bullet points)
+        - likely_pain_points (list)
+        - suggested_talking_points (list)
+        - risks_or_objections (list)"""),
+        HumanMessage(content=f"Research {prospect_name} at {company}")
     ]
 
     while True:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=messages,
-            tools=tools,
-            tool_choice="auto"
-        )
-        msg = response.choices[0].message
+        response = llm.invoke(messages)
         messages.append(msg)
-       
+
