@@ -28,7 +28,10 @@ def run_agent(prospect_name: str, company_name: str) -> str:
         - recent_news (list of 3 bullet points)
         - likely_pain_points (list)
         - suggested_talking_points (list)
-        - risks_or_objections (list)"""),
+        - risks_or_objections (list)
+        next step is to save the briefing using the save_briefing tool.
+        IMPORTANT: Check if the company has been researched before, recall past notes using the recall_past_notes tool
+        and incorporate that information into your briefing."""),
         HumanMessage(content=f"Research {prospect_name} at {company_name}")
     ]
 
@@ -38,7 +41,10 @@ def run_agent(prospect_name: str, company_name: str) -> str:
 
         if msg.tool_calls:
             for call in msg.tool_calls:
-                fn = {"web_search": web_search, "scrape_page": scrape_page}[call["name"]]
+                fn = {"web_search": web_search,
+                      "scrape_page": scrape_page,
+                      "save_briefing": save_briefing,
+                      "recall_past_notes": recall_past_notes}[call["name"]]
                 result = fn(**call["args"])
                 messages.append(ToolMessage(content=str(result), tool_call_id=call["id"]))
         else:

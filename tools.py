@@ -27,7 +27,13 @@ def recall_past_notes(company: str) -> str:
         query_texts=[company],
         n_results=1
     )
-    return results["documents"][0][0] if results["documents"] else "No past notes found."
+    try:
+        past_notes = results["documents"][0][0]
+    except IndexError:
+        past_notes = "No past notes found."
+    except Exception as e:
+        past_notes = f"Error occurred: {e}"
+    return past_notes
 
 
 tools = [
