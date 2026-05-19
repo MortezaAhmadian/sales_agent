@@ -31,7 +31,10 @@ def run_agent(prospect_name: str, company_name: str) -> str:
         - risks_or_objections (list)
         next step is to save the briefing using the save_briefing tool.
         IMPORTANT: Check if the company has been researched before, recall past notes using the recall_past_notes tool
-        and incorporate that information into your briefing."""),
+        and incorporate that information into your briefing.
+        IMPORTANT: NEVER accept a text tool call as the final output. You MUST use the tools provided.
+        If you receive a text tool call, it is an instruction to use the tools, not the final output. 
+        Always respond to a text tool call with another message that uses the tools."""),
         HumanMessage(content=f"Research {prospect_name} at {company_name}")
     ]
 
