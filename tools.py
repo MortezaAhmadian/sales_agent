@@ -4,7 +4,7 @@ import requests, json
 import chromadb
 
 
-_CHROMA = chromadb.Client()
+_CHROMA = chromadb.PersistentClient(path="./chroma_db")
 _COLLECTION = _CHROMA.get_or_create_collection("sales_agent")
 
 def web_search(query: str) -> str:
@@ -16,10 +16,10 @@ def scrape_page(url: str) -> str:
     soup = BeautifulSoup(html.text, 'html.parser')
     return soup.get_text(separator=" ", strip=True)[:3000]
 
-def save_briefing(name: str, briefing: str) -> None:
+def save_briefing(company: str, briefing: str) -> None:
     _COLLECTION.add(
         documents=[briefing],
-        ids=[name]
+        ids=[company]
     )
 
 def recall_past_notes(company: str) -> str:
@@ -29,8 +29,8 @@ def recall_past_notes(company: str) -> str:
     )
     try:
         past_notes = results["documents"][0][0]
-    except IndexError:
-        past_notes = "No past notes found."
+    except IndexError as e:
+        past_notes = f"No past notes found for {company}."
     except Exception as e:
         past_notes = f"Error occurred: {e}"
     return past_notes
@@ -71,8 +71,8 @@ tools = [
             "parameters": 
                 {
                     "type": "object", 
-                    "properties": {"name": {"type": "string"}, "briefing": {"type": "string"}}, 
-                    "required": ["name", "briefing"]
+                    "properties": {"company": {"type": "string"}, "briefing": {"type": "string"}}, 
+                    "required": ["company", "briefing"]
                 }
         }
     },
