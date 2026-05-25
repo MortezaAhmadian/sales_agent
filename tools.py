@@ -42,6 +42,7 @@ tools = [
         "function": {
             "name": "web_search",
             "description": "Search the web for recent information about a company or person",
+            "pointer": web_search,
             "parameters": 
                 {
                     "type": "object", 
@@ -55,6 +56,7 @@ tools = [
         "function": {
             "name": "scrape_page",
             "description": "Fetch and read the content of a webpage",
+            "pointer": scrape_page,
             "parameters": 
                 {
                     "type": "object", 
@@ -68,6 +70,7 @@ tools = [
         "function": {
             "name": "save_briefing",
             "description": "Save a briefing for a company",
+            "pointer": save_briefing,
             "parameters": 
                 {
                     "type": "object", 
@@ -81,6 +84,7 @@ tools = [
         "function": {
             "name": "recall_past_notes",
             "description": "Recall past notes about a company",
+            "pointer": recall_past_notes,
             "parameters": 
                 {
                     "type": "object", 
