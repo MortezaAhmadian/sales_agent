@@ -5,7 +5,7 @@ from agent import Agent
 
 prospect_name = "Elon Musk"
 company_name = "Tesla"
-messages = [
+analytical_messages = [
         SystemMessage(content="""You are a sales research agent. Given a prospect's name and company.
         Step 1: CHECK if the company has been researched before by recalling past notes with the recall_past_notes tool.
          - If past notes are found, USE them to create a briefing and REPORT the briefing.
@@ -22,4 +22,5 @@ messages = [
         Always respond to a text tool call with another message that uses the tools."""),
         HumanMessage(content=f"Research {prospect_name} at {company_name}")
     ]
-agent = Agent(name="Sales Research Agent", messages=messages)
+
+analytical_agent = Agent(name="Sales Research Agent", messages=analytical_messages)
