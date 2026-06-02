@@ -1,7 +1,6 @@
 import httpx, os
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import ToolMessage
-from tools import tools
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,8 +19,9 @@ def _make_llm():
 
 
 class Agent:
-    def __init__(self):
-        self.llm = _make_llm().bind_tools(tools)
+    def __init__(self, tools: list = None):
+        if tools:
+            self.llm = _make_llm().bind_tools(tools)
         self.messages: list = []
         self.name: str = ""
     
