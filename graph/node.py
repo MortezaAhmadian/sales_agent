@@ -18,16 +18,22 @@ def _make_llm():
     )
 
 
-class Agent:
+class Node:
     def __init__(self, tools: list = None):
-        if tools:
+        self.tools = tools
+        if self.tools is None:
             self.llm = _make_llm().bind_tools(tools)
         self.messages: list = []
         self.name: str = ""
     
-    def agent(self, name: str, messages: list) -> str:
+    def node(self, name: str, messages: list) -> str:
         self.name = name
         self.messages = messages
+        if not self.tools:
+            msg = self.llm.invoke(self.messages)
+            self.messages.append(msg)
+            return self.messages
+
         while True:
             msg = self.llm.invoke(self.messages)
             self.messages.append(msg)
@@ -35,9 +41,9 @@ class Agent:
             if msg.tool_calls:
                 for call in msg.tool_calls:
                     fn = {tool["function"]["name"]: tool["function"]["pointer"] 
-                        for tool in tools}[call["name"]]
+                        for tool in self.tools}[call["name"]]
                     result = fn(**call["args"])
                     self.messages.append(ToolMessage(content=str(result), tool_call_id=call["id"]))
             else:
-                return self.messages[-1].content
+                return self.name, self.messages
     

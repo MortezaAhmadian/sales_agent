@@ -1,11 +1,11 @@
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from tools import tools
-from agent import Agent
+from SalesAgent.graph.node import Agent
 
 
 prospect_name = "Elon Musk"
 company_name = "Tesla"
-analytical_messages = [
+research_messages = [
         SystemMessage(content="""You are a sales research agent. Given a prospect's name and company.
         Step 1: CHECK if the company has been researched before by recalling past notes with the recall_past_notes tool.
          - If past notes are found, USE them to create a briefing and REPORT the briefing.
@@ -23,4 +23,5 @@ analytical_messages = [
         HumanMessage(content=f"Research {prospect_name} at {company_name}")
     ]
 
-analytical_agent = Agent(name="Sales Research Agent", messages=analytical_messages)
+research_agent = Agent(tools = tools)
+
