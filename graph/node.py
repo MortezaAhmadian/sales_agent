@@ -1,6 +1,7 @@
 import httpx, os
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import ToolMessage
+from state import SalesAgentState
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,20 +20,18 @@ def _make_llm():
 
 
 class Node:
-    def __init__(self, tools: list = None):
+    def __init__(self,tools: list = None):
         self.tools = tools
         if self.tools is None:
             self.llm = _make_llm().bind_tools(tools)
         self.messages: list = []
-        self.name: str = ""
     
-    def node(self, name: str, messages: list) -> str:
-        self.name = name
-        self.messages = messages
-        if not self.tools:
+    def node(self, state: SalesAgentState) -> SalesAgentState:
+        if not self.tools and self.messages:
             msg = self.llm.invoke(self.messages)
             self.messages.append(msg)
-            return self.messages
+            state.messages = self.messages
+            return state
 
         while True:
             msg = self.llm.invoke(self.messages)
@@ -45,5 +44,6 @@ class Node:
                     result = fn(**call["args"])
                     self.messages.append(ToolMessage(content=str(result), tool_call_id=call["id"]))
             else:
-                return self.name, self.messages
+                state.messages = self.messages
+                return {**state, "raw_research": msg.content}
     

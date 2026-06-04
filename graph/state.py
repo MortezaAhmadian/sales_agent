@@ -8,4 +8,4 @@ class SalesAgentState(TypedDict):
     raw_massage: str
     analysis: str
     final_briefing: str
-    message : Annotated[list, operator.add]
+    messages : Annotated[list, operator.add]
