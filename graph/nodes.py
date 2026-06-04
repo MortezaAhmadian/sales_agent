@@ -45,15 +45,15 @@ state["final_briefing"] = state["messages"][-1].content
 
 
 
-graph = StateGraph(AgentState)
+# graph = StateGraph(AgentState)
 
-graph.add_node("researcher", research_node)
-graph.add_node("analyst", analyst_node)
-graph.add_node("writer", writer_node)
+# graph.add_node("researcher", research_node)
+# graph.add_node("analyst", analyst_node)
+# graph.add_node("writer", writer_node)
 
-graph.set_entry_point("researcher")
-graph.add_edge("researcher", "analyst")
-graph.add_edge("analyst", "writer")
-graph.add_edge("writer", END)
+# graph.set_entry_point("researcher")
+# graph.add_edge("researcher", "analyst")
+# graph.add_edge("analyst", "writer")
+# graph.add_edge("writer", END)
 
-pipeline = graph.compile()
+# pipeline = graph.compile()
