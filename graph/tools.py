@@ -1,4 +1,3 @@
-import collections
 import chromadb
 from duckduckgo_search import DDGS
 import requests
