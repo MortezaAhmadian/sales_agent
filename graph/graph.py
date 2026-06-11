@@ -1,4 +1,6 @@
 from .nodes import research_node, analyst_node, writer_node
+from .states import AgentState
+
 
 graph = StateGraph(AgentState)
 
