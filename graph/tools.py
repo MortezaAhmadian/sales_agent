@@ -1,5 +1,5 @@
 import collections
-
+import chromadb
 from duckduckgo_search import DDGS
 import requests
 from bs4 import BeautifulSoup
@@ -7,7 +7,13 @@ import json
 
 from langchain_core.tools import tool
 from langchain_core.messages import ToolMessage
-from collections import collection
+
+
+chroma = chromadb.PersistentClient(path="./chroma_db")
+collection = chroma.get_or_create_collection("sales_memory")
+
+def save_briefing(company: str, briefing: str):
+    collection.upsert(documents=[briefing], ids=[company])
 
 
 def recall_past_notes(company: str) -> str:
