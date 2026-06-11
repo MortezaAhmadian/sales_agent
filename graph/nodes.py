@@ -1,7 +1,6 @@
 import os
 import json
 import httpx
-import chromadb
 
 from dotenv import load_dotenv
 from state import AgentState
@@ -29,18 +28,6 @@ def _make_llm():
         ),
         temperature=0.1,
     )
-
-# ─────────────────────────────────────────────
-# Memory (ChromaDB)
-# ─────────────────────────────────────────────
-
-chroma = chromadb.PersistentClient(path="./chroma_db")
-collection = chroma.get_or_create_collection("sales_memory")
-
-def save_briefing(company: str, briefing: str):
-    collection.upsert(documents=[briefing], ids=[company])
-
-
 
 # ─────────────────────────────────────────────
 # Agent Nodes
