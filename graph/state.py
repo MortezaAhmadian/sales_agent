@@ -2,10 +2,11 @@ from typing import TypedDict, Annotated
 import operator
 
 
-class SalesAgentState(TypedDict):
+class AgentState(TypedDict):
     prospect_name: str
     company: str
-    raw_massage: str
+    raw_research: str
     analysis: str
     final_briefing: str
-    messages : Annotated[list, operator.add]
+    critique: dict
+    messages: Annotated[list, operator.add]

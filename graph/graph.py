@@ -1,12 +1,14 @@
-# graph = StateGraph(AgentState)
+from .nodes import research_node, analyst_node, writer_node
 
-# graph.add_node("researcher", research_node)
-# graph.add_node("analyst", analyst_node)
-# graph.add_node("writer", writer_node)
+graph = StateGraph(AgentState)
 
-# graph.set_entry_point("researcher")
-# graph.add_edge("researcher", "analyst")
-# graph.add_edge("analyst", "writer")
-# graph.add_edge("writer", END)
+graph.add_node("researcher", research_node)
+graph.add_node("analyst", analyst_node)
+graph.add_node("writer", writer_node)
 
-# pipeline = graph.compile()
+graph.set_entry_point("researcher")
+graph.add_edge("researcher", "analyst")
+graph.add_edge("analyst", "writer")
+graph.add_edge("writer", END)
+
+pipeline = graph.compile()
