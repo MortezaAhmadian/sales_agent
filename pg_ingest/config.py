@@ -10,13 +10,13 @@ class Config:
     # PostgreSQL
     pg_host: str = os.getenv("PG_HOST", "localhost")
     pg_port: int = int(os.getenv("PG_PORT", "5432"))
-    pg_db: str = os.getenv("PG_DB", "ragdb")
+    pg_db: str = os.getenv("PG_DB", "ragdb_sales")
     pg_user: str = os.getenv("PG_USER", "postgres")
     pg_password: str = os.getenv("PG_PASSWORD", "")
     pg_table: str = os.getenv("PG_TABLE", "doc_chunks")
 
     # Embeddings
-    embed_provider: str = os.getenv("EMBED_PROVIDER", "openai")  # openai | ollama
+    embed_provider: str = os.getenv("EMBED_PROVIDER", "ollama") 
     embed_model: str = os.getenv("EMBED_MODEL", "text-embedding-3-small")
     embed_dims: int = int(os.getenv("EMBED_DIMS", "1536"))
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
