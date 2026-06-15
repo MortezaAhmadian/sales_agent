@@ -3,7 +3,7 @@ services:
   postgres:
     image: pgvector/pgvector:pg16
     environment:
-      POSTGRES_DB: ragdb
+      POSTGRES_DB: ragdb_sales
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -11,7 +11,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d ragdb"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ragdb_sales"]
       interval: 10s
       timeout: 5s
       retries: 5
