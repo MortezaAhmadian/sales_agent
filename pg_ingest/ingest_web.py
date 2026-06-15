@@ -33,22 +33,22 @@ logger = logging.getLogger(__name__)
 
 SOURCES: dict[str, dict] = {
     "kubernetes": {
-        "seed_url": "https://kubernetes.io/docs/home/",
-        "path_filter": "/docs/",
-        "component": "kubernetes",
+        "seed_url": "https://nar.realtor/research-and-statistics",
+        "path_filter": "/research/",
+        "component": "nar",
         "max_pages": 2000,
     },
     "helm": {
-        "seed_url": "https://helm.sh/docs/",
-        "path_filter": "/docs/",
-        "component": "helm",
+        "seed_url": "https://www.fanniemae.com/data-and-insights",
+        "path_filter": "/research/",
+        "component": "fannie-mae",
         "max_pages": 500,
     },
     "python": {
-        "seed_url": "https://docs.python.org/3/",
-        "path_filter": "/3/",
-        "component": "python",
-        "max_pages": 2000,
+        "seed_url": "https://www.freddiemac.com/research",
+        "path_filter": "/research/",
+        "component": "freddiemac",
+        "max_pages": 1000,
     },
 }
 
