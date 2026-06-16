@@ -42,7 +42,11 @@ sales_agent/
 docker compose up -d
 ```
 
-This starts PostgreSQL with the pgvector extension and Ollama for local embeddings.
+This starts two containers: PostgreSQL with the pgvector extension, and Ollama for local embeddings. Verify both are running:
+
+```bash
+docker ps
+```
 
 ### 2. Install dependencies
 
@@ -78,19 +82,61 @@ EMBED_DIMS=1536
 OPENAI_API_KEY=sk-...
 ```
 
-### 4. Ingest knowledge documents (optional)
+### 4. Pull the embedding model into Ollama
 
-The RAG store is read-only at runtime. Populate it once with the ingestion pipeline:
+Ollama starts empty — the model must be pulled before ingestion. This is a one-time step (~274 MB):
 
 ```bash
-python -m pg_ingest.ingest_web                     # all sources
-python -m pg_ingest.ingest_web --sources nar       # single source
-python -m pg_ingest.ingest_web --build-index       # rebuild HNSW index after ingestion
+docker exec -it salesagent-ollama-1 ollama pull nomic-embed-text
+```
+
+Verify it downloaded:
+
+```bash
+curl http://localhost:11434/api/tags
+```
+
+You should see `nomic-embed-text:latest` in the response.
+
+> If you are using OpenAI embeddings instead, skip this step.
+
+### 5. Verify the PostgreSQL database
+
+Connect to confirm the database is ready:
+
+```bash
+docker exec -it salesagent-postgres-1 psql -U postgres -d ragdb_sales
+```
+
+If the database does not exist, recreate the container so it initialises correctly:
+
+```bash
+docker compose down -v
+docker compose up -d
+```
+
+The `-v` flag drops the old volume and forces a clean reinitialisation.
+
+### 6. Ingest knowledge documents
+
+The RAG store is read-only at runtime. Populate it once before running the agent:
+
+```bash
+python -m pg_ingest.ingest_web                                    # all configured sources
+python -m pg_ingest.ingest_web --sources investopedia_realestate  # single source
+python -m pg_ingest.ingest_web --build-index                      # rebuild HNSW index after ingestion
 ```
 
 To add your own sources, edit the `SOURCES` dict in `pg_ingest/ingest_web.py`.
 
-### 5. Run
+After ingestion, verify rows were written:
+
+```bash
+docker exec -it salesagent-postgres-1 psql -U postgres -d ragdb_sales \
+  -c "SELECT component, COUNT(*) FROM doc_chunks GROUP BY component;"
+```
+
+### 7. Run the agent
 
 ```bash
 python graph.py

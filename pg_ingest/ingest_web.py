@@ -32,17 +32,17 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 SOURCES: dict[str, dict] = {
-    "nar": {
-        "seed_url": "https://fred.stlouisfed.org/categories/97",
-        "path_filter": "/research/",
-        "component": "nar",
-        "max_pages": 2000,
+    "investopedia_realestate": {
+        "seed_url": "https://www.investopedia.com/mortgage-4689708",
+        "path_filter": "/mortgage/",
+        "component": "mortgage",
+        "max_pages": 50,
     },
-    "freddiemac": {
-        "seed_url": "https://www.freddiemac.com/research",
-        "path_filter": "/research/",
-        "component": "freddiemac",
-        "max_pages": 1000,
+    "nar_research": {
+        "seed_url": "https://www.nar.realtor/research-and-statistics",
+        "path_filter": "/research-and-statistics/",
+        "component": "nar",
+        "max_pages": 50,
     },
 }
 

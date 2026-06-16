@@ -56,10 +56,10 @@ class Embedder:
         results: list[list[float]] = []
         for text in texts:
             resp = _requests.post(
-                f"{self.config.ollama_base_url}/api/embeddings",
-                json={"model": self.config.embed_model, "prompt": text},
+                f"{self.config.ollama_base_url}/api/embed",
+                json={"model": self.config.embed_model, "input": text},
                 timeout=60,
             )
             resp.raise_for_status()
-            results.append(resp.json()["embedding"])
+            results.append(resp.json()["embeddings"][0])
         return results

@@ -151,7 +151,6 @@ def save_node(state: AgentState) -> AgentState:
     """Log completion. RAG is read-only; no memory write."""
     logger.info("Briefing for '%s' approved and complete.", state["company"])
     return state
-    return state
 
 
 # ── Conditional edge ──────────────────────────────────────────────────────
