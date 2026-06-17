@@ -42,30 +42,44 @@ class RAGStore:
         self.conn.commit()
 
     def _make_embed_client(self):
-        import openai
         if config.embed_provider == "openai":
+            import openai
             return openai.OpenAI(api_key=config.embed_api_key)
-        return openai.OpenAI(
-            api_key=config.embed_api_key or "ollama",
-            base_url=f"{config.embed_base_url}/v1",
-        )
+        return None  # Ollama embedding is done via HTTP requests, no client needed
 
     # ── Embedding ─────────────────────────────────────────────────────
 
     def _embed(self, text: str) -> list[float]:
-        for attempt in range(3):
-            try:
-                resp = self._embed_client.embeddings.create(
-                    model=config.embed_model,
-                    input=[text],
-                )
-                return resp.data[0].embedding
-            except Exception as exc:
-                if attempt == 2:
-                    raise
-                wait = 2 ** attempt
-                logger.warning("Embedding error (%s); retrying in %ds", exc, wait)
-                time.sleep(wait)
+        if config.embed_provider == "openai":
+            for attempt in range(3):
+                try:
+                    resp = self._embed_client.embeddings.create(
+                        model=config.embed_model,
+                        input=[text],
+                    )
+                    return resp.data[0].embedding
+                except Exception as exc:
+                    if attempt == 2:
+                        raise
+                    wait = 2 ** attempt
+                    logger.warning("Embedding error (%s); retrying in %ds", exc, wait)
+                    time.sleep(wait)
+        elif config.embed_provider == "ollama":
+            import requests as _requests
+            for attempt in range(3):
+                    try:
+                        resp = _requests.post(
+                            f"{config.embed_base_url}/api/embed",
+                            json={"model": config.embed_model, "input": text},
+                            timeout=60,
+                        )
+                        resp.raise_for_status()
+                        return resp.json()["embeddings"][0]
+                    except Exception as exc:
+                        if attempt == 2:
+                            raise
+                        time.sleep(2 ** attempt)
+                
 
     # ── Read ──────────────────────────────────────────────────────────
 
