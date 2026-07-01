@@ -36,13 +36,13 @@ SOURCES: dict[str, dict] = {
         "seed_url": "https://www.investopedia.com/mortgage-4689708",
         "path_filter": "/mortgage/",
         "component": "mortgage",
-        "max_pages": 50,
+        "max_pages": 1000,
     },
     "nar_research": {
         "seed_url": "https://www.nar.realtor/research-and-statistics",
         "path_filter": "/research-and-statistics/",
         "component": "nar",
-        "max_pages": 50,
+        "max_pages": 1000,
     },
 }
 
